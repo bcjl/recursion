@@ -10,7 +10,18 @@ var parseJSON = function(json) {
   var lastchar = json.substring(json.length - 1);
 
   if(firstchar === "\"" && lastchar === "\""){
-    output = "" + insides;
+    output = "";
+    var flag = false;
+
+    for(var i = 0; i < insides.length; i++){
+      if (insides[i] !== "\\" || flag){
+      output += insides[i];
+      flag = false;
+      }
+      else if(insides[i] === "\\"){
+        flag = true;
+      }
+    }
   }
 
   else if(firstchar === "[" && lastchar === "]"){
@@ -21,35 +32,42 @@ var parseJSON = function(json) {
         output.push(parseJSON(arrayInsides[i].trim()));
       }
     }
-  	// if(json.substring(json.length - 1) !== "]"){
-  	// 	throw new SyntaxError();
-  	// }
   }
 
   else if(firstchar === "{" && lastchar === "}"){
   	output = {};
-    // var startpos = insides.indexOf("\"");
-    // var endpos = insides.indexOf("\"", startpos + 1);
+    insides += ","
 
-    // var key = json.substring(startpos + 1, endpos);
-    // json = json.substring(endpos + 1);
+    while(insides.length > 5){
+    //This gets the key and removes it from the inside of "insides"
+      var keystart = insides.indexOf("\"");
+      var keyend = insides.indexOf(":");
+      var key = insides.substring(keystart + 1, keyend - 1);
+      insides = insides.substring(keyend + 1).trim();
 
-    var propPairs = insides.split(",");
-    if (json.length > 2){
-      for(var i = 0; i < propPairs.length; i++){
-        var keyvalArr = propPairs[i].split(":");
-        var key = keyvalArr[0].trim();
-        key = key.substring(1, key.length - 1);
-        console.log(keyvalArr[0]);
-        console.log(key);
-        var val = keyvalArr[1].trim();
 
-        output[key] = parseJSON(val);
-      }
+      var valueend = insides.indexOf(",");
+      var value = insides.substring(0, valueend);
+      insides = insides.substring(valueend).trim();
+
+      output[key] = parseJSON(value);
     }
-  	// if(json.substring(json.length - 1) !== "}"){
-  	// 	throw new SyntaxError();
-  	// }
+
+
+
+    // var propPairs = insides.split(",");
+    // if (json.length > 2){
+    //   for(var i = 0; i < propPairs.length; i++){
+    //     var keyvalArr = propPairs[i].split(":");
+    //     var key = keyvalArr[0].trim();
+    //     key = key.substring(1, key.length - 1);
+    //     console.log(keyvalArr[0]);
+    //     console.log(key);
+    //     var val = keyvalArr[1].trim();
+
+    //     output[key] = parseJSON(val);
+    //   }
+    // }
   }
 
   else{
