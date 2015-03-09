@@ -50,7 +50,7 @@ parseableStrings = [
 
   // // basic nesting
   '{"a":{"b":"c"}}',
-  // '{"a":["b", "c"]}',
+  '{"a":["b", "c"]}',
   '[{"a":"b"}, {"c":"d"}]',
   '{"a":[],"c": {}, "b": true}',
   '[[[["foo"]]]]',
@@ -123,5 +123,5 @@ parseableStrings = [
 // JSON does not allow you to parse these strings
 unparseableStrings = [
     '["foo", "bar"',
-    // '["foo", "bar\\"]'
+    '["foo", "bar\\"]'
 ];

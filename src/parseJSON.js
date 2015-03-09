@@ -9,7 +9,7 @@ var parseJSON = function(json) {
   var firstchar = json.substring(0,1);
   var lastchar = json.substring(json.length - 1);
 
-  if(firstchar === "\"" && lastchar === "\""){
+  if(firstchar === "\"" && lastchar === "\"" && insides.substring(insides.length - 1) !== "\\"){
     output = "";
     var flag = false;
 
@@ -44,12 +44,21 @@ var parseJSON = function(json) {
       var keyend = insides.indexOf(":");
       var key = insides.substring(keystart + 1, keyend - 1);
       insides = insides.substring(keyend + 1).trim();
+      // console.log(key + " and " + insides);
 
 
-      var valueend = insides.indexOf(",");
+      var valueend;
+      if(insides[0] === "{"){
+        valueend = insides.indexOf("}") + 1;
+      } 
+      else if(insides[0] === "["){
+        valueend = insides.indexOf("]") + 1;
+      } else {
+        valueend = insides.indexOf(",");
+      }
       var value = insides.substring(0, valueend);
       insides = insides.substring(valueend).trim();
-
+      // console.log(value + " and " + insides);
       output[key] = parseJSON(value);
     }
 
@@ -76,13 +85,3 @@ var parseJSON = function(json) {
 
   return output;
 };
-
-
-// var RemoveQuotes = function(string){
-//   var output = "";
-//   for (var i = 0; i < string.length; i++){
-//     if(){
-
-//     }
-//   }
-// }
